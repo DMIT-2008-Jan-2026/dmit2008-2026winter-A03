@@ -31,8 +31,20 @@ document.getElementById("expense-form-add").addEventListener("submit", (e) => {
     const category = document.getElementById("category").value;
     const date = document.getElementById("date").value;
     const amount = document.getElementById("amount").value;
-    if(title && category && date && amount) {
-        expenses.addExpense({title, category, date, amount});
+
+    const submitButton = document.getElementById("submitter")
+    // check button text to determine add vs. edit, just like before
+    if (submitButton.innerText === "Add Expense") {
+        if(title && category && date && amount) {
+            expenses.addExpense({title, category, date, amount});
+            e.target.reset();
+        }
+    } else { // allow editing to occur otherwise
+        // if we're in this branch of logic, it means submit button DOESN'T say "add expense" 
+        const id = Number(document.getElementById("expense-id").value)
+        expenses.editExpense(id, { title, category, date, amount })
+        // then, reset state of button after submit
         e.target.reset();
+        submitButton.innerText = "Add Expense";
     }
 });
