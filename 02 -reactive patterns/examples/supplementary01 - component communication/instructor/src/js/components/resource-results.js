@@ -50,9 +50,44 @@ class ResourceResults extends HTMLElement {
   
 
   render() {
-    // TODO: Update to render from the private results field, if it's empty, show "No results found" message
-    
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+    // copy template HTML above onto the shadow root node for this component, 
+    const content = template.content.cloneNode(true)
+    // and snipe that list-group class so we can nest our data display inside it
+    const listGroup = content.querySelector('.list-group');
+
+
+    // then render a result row for each item in the results array
+    if (this.#results.length) {  // resolves true if the results array contains items
+      // for each result in the array, generate HTML to hold/display data
+      // -> pack it all inside a sneaky <button> so we can later easily highlight it when active with bootstrap classes
+      const resultsHTML = this.#results.map(
+        result => `
+        <button type="button" class="list-group-item list-group-item-action" data-id="${result.id}">
+          <div class="d-flex w-100 justify-content-between">
+            <h2 class="h6 mb-1">${result.title}</h2>
+            <small>${result.category}</small>
+          </div>
+          <p class="mb-1 small text-body-secondary">${result.summary}</p>
+          <small class="text-body-secondary">${result.location}</small>
+        </button>`
+      ); 
+
+      // inject the HTML we just generated inside the list-group node
+      listGroup.innerHTML = resultsHTML.join(''); // resultsHTML is an array, so combine each HTML blob back-to-back into a string
+
+    } else {
+      // If #results contains no items, display some default text.
+      // Always communicate to the user in UI design! An empty card might have them wondering if something's broken.
+      listGroup.innerHTML = `
+        <div class="list-group-item">
+          <p class="mb-0">No results found.</p>
+        </div>`;
+    }
+
+    // finally, take the content we composed and add it to the shadow root node!
+    this.shadowRoot.innerHTML = '';  // clear current contents first; we're re-rendering
+    this.shadowRoot.appendChild(content);    
   }
 }
 
