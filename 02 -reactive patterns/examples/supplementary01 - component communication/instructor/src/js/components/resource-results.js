@@ -24,8 +24,9 @@ class ResourceResults extends HTMLElement {
 
   constructor() {
     super();
-    // TODO: Bind the handleResultClick method to this instance
-
+    // WTF is this and why do we need to do it? -> https://dev.to/aman_singh/why-do-we-need-to-bind-methods-inside-our-class-component-s-constructor-45bn
+    // If you read to the end, you'll know we could've just used an arrow function... but this illustrates class vs. instance behavioural differences 
+    this._handleResultClick = this._handleResultClick.bind(this);
     this.attachShadow({ mode: 'open' });
   }
 
@@ -34,16 +35,21 @@ class ResourceResults extends HTMLElement {
     this.render();
   }
 
-  // TODO: Add an event handler method for result selection
+  _handleResultClick(event) {
+    // Let's leave this empty for now,
+    // and first deal with where it needs to be called elsewhere in our object for event-driven behaviour.
+  }
 
-  connectedCallback() {
-    // TODO: Add a click event listener to handle result selection
+  connectedCallback() {  // <- when the component loads/attaches into the DOM...
+    this.shadowRoot.addEventListener('click', this._handleResultClick);
     
     this.render();
   }
 
-  // TODO: Clean up event listener in disconnectedCallback
-
+  disconnectedCallback () {  // <- when the component is unloaded/removed from the DOM...
+    // ... then clean up your unused event listeners!
+    this.shadowRoot.removeEventListener('click', this._handleResultClick);
+  }
   
 
   render() {
