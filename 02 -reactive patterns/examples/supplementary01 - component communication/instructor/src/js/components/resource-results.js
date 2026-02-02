@@ -20,9 +20,7 @@ template.innerHTML = `
   </section>`;
 
 class ResourceResults extends HTMLElement {
-  #results = [];  // # makes a property or method privately scoped.
-  // This means only methods/logic from the same instance (e.g. ResourceResults) can change it.
-  // We're going to have a controlled process for writing the data, and we don't want outside logic to be able to bypass that.
+  #results = [];
 
   constructor() {
     super();
@@ -32,9 +30,8 @@ class ResourceResults extends HTMLElement {
   }
 
   set results(data) {
-    // The setter method for our private array - similar to what you're learning in C# right now.
     this.#results = data;
-    this.render();  // when data is set, call our render method (below) to fire the display logic.
+    this.render();
   }
 
   // TODO: Add an event handler method for result selection
@@ -50,17 +47,11 @@ class ResourceResults extends HTMLElement {
   
 
   render() {
-
-    // copy template HTML above onto the shadow root node for this component, 
     const content = template.content.cloneNode(true)
-    // and snipe that list-group class so we can nest our data display inside it
     const listGroup = content.querySelector('.list-group');
 
 
-    // then render a result row for each item in the results array
-    if (this.#results.length) {  // resolves true if the results array contains items
-      // for each result in the array, generate HTML to hold/display data
-      // -> pack it all inside a sneaky <button> so we can later easily highlight it when active with bootstrap classes
+    if (this.#results.length) {
       const resultsHTML = this.#results.map(
         result => `
         <button type="button" class="list-group-item list-group-item-action" data-id="${result.id}">
@@ -73,20 +64,16 @@ class ResourceResults extends HTMLElement {
         </button>`
       ); 
 
-      // inject the HTML we just generated inside the list-group node
-      listGroup.innerHTML = resultsHTML.join(''); // resultsHTML is an array, so combine each HTML blob back-to-back into a string
+      listGroup.innerHTML = resultsHTML.join('');
 
     } else {
-      // If #results contains no items, display some default text.
-      // Always communicate to the user in UI design! An empty card might have them wondering if something's broken.
       listGroup.innerHTML = `
         <div class="list-group-item">
           <p class="mb-0">No results found.</p>
         </div>`;
     }
 
-    // finally, take the content we composed and add it to the shadow root node!
-    this.shadowRoot.innerHTML = '';  // clear current contents first; we're re-rendering
+    this.shadowRoot.innerHTML = '';
     this.shadowRoot.appendChild(content);    
   }
 }
