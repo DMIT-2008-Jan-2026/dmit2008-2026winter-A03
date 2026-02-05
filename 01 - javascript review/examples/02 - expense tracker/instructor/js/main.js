@@ -1,92 +1,105 @@
-
-// 1. import data
 import theExpenses from "./expense-data.js";
 
-// 2. get expense container & list elements
-const expenseContainer = document.getElementById("expense-container")
-const expenseList = document.getElementById("expense-list")
+const expenseContainer = document.getElementById("expense-container");
 
-// 3. create a function to render our expenses
 function renderExpenses(expenses) {
-    // first, clear existing container contents
-    expenseContainer.innerHTML = "";
+    const expenseList = document.getElementById("expense-list");
+    expenseContainer.innerHTML = ""; // Clear existing content
 
-    // render out a card for each expense in data
-    expenses.forEach((expense) => { 
+    expenses.forEach((expense) => {
         expenseContainer.innerHTML += `
-        <div class="card" id="${expense.id}">
-          <div class="header">
-            <div>
-              <div class="title">${expense.title}</div>
-              <div class="meta category">${expense.category}</div>
+    <div class="card" id="${expense.id}">
+              <div class="header">
+                <div>
+                  <div class="title">${expense.title}</div>
+                  <div class="meta category">${expense.category}</div>
+                </div>
+                <div class="amount">${expense.amount} </div>
+              </div>
+              <div class="meta date">${expense.date}</div>
+              <div class="actions">
+                <button class="edit-btn" id=${expense.id}>Edit</button>
+                <button class="delete-btn" id=${expense.id}>Delete</button>
+              </div>
             </div>
-            <div class="amount">$${expense.amount}</div>
-          </div>
-          <div class="meta date">${expense.date}</div>
-          <div class="actions">
-            <button class="edit-btn" id=${expense.id}>Edit</button>
-            <button class="delete-btn" id=${expense.id}>Delete</button>
-          </div>
-        </div>            
-        `;
+    `;
     });
 }
-
 renderExpenses(theExpenses);
 
-// 3. handle behaviour for form submission
-document.getElementById("expense-form-add").addEventListener(
-    "submit",
-    function (event) {
-
-        event.preventDefault() // prevent default HTML form submission behaviour
-
-        // generate objects with values from DOM input fields
+document
+    .getElementById("expense-form-add")
+    .addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form submission
         const title = document.getElementById("title").value;
         const category = document.getElementById("category").value;
         const date = document.getElementById("date").value;
-        const amount = document.getElementById("amount").value;
-
-        // add a new expense to the data container if our submit button was clicked
+        const amount = parseFloat(document.getElementById("amount").value);
         if (document.getElementById("submiter").innerText === "Add Expense") {
-            const newExpense = {
-                id: theExpenses.length + 1, // basic way to auto-increment IDs
-                title,
-                category,
-                date,
-                amount,
-            };
-
-            theExpenses.push(newExpense) // add our new expense to the data array
-            renderExpenses(theExpenses)  // re-render expenses
-            this.reset();
+            if (title && category && date && !isNaN(amount)) {
+                const newExpense = {
+                    id: theExpenses.length + 1,
+                    title,
+                    category,
+                    date,
+                    amount,
+                };
+                theExpenses.push(newExpense);
+                renderExpenses(theExpenses);
+                this.reset(); // Reset the form
+            } else {
+                alert("Please fill in all fields correctly.");
+            }
         } else {
-            const expenseId = parseInt(document.getElementById("expense-id").value) // get hidden ID input from input fields
+            const expenseId = parseInt(document.getElementById("expense-id").value);
             const expenseToEdit = theExpenses.find(
                 (expense) => expense.id === expenseId
-            ); // match an actual data element in expense container by id
-
-            if (expenseToEdit) {  // first, make sure we actually got an object!
+            );
+            if (expenseToEdit) {
                 expenseToEdit.title = title;
                 expenseToEdit.category = category;
                 expenseToEdit.date = date;
                 expenseToEdit.amount = amount;
-                this.reset();
+                this.reset(); // Reset the form
                 document.getElementById("submiter").innerText = "Add Expense";
                 renderExpenses(theExpenses);
             }
         }
-    }
-)
+    });
 
-// 4. simple searchbox filter
-document.getElementById("searchbox").addEventListener(
-    "input",  // logic will fire every time there's input change in the searchbox
-    function (event) {
+document
+    .getElementById("searchbox")
+    .addEventListener("input", function (event) {
         const searchTerm = event.target.value.toLowerCase();
-        const filteredExpenses = theExpenses.filter(
-            (expense) => expense.title.toLowerCase().includes(searchTerm)
+        const filteredExpenses = theExpenses.filter((expense) =>
+            expense.title.toLowerCase().includes(searchTerm)
         );
         renderExpenses(filteredExpenses);
+    });
+
+expenseContainer.addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete-btn")) {
+        const expenseId = parseInt(event.target.id);
+        const expenseIndex = theExpenses.findIndex(
+            (expense) => expense.id === expenseId
+        );
+        if (expenseIndex !== -1) {
+            theExpenses.splice(expenseIndex, 1);
+            renderExpenses(theExpenses);
+        }
+    } else if (event.target.classList.contains("edit-btn")) {
+        const expenseId = parseInt(event.target.id);
+        const expenseToEdit = theExpenses.find(
+            (expense) => expense.id === expenseId
+        );
+        if (expenseToEdit) {
+            document.getElementById("title").value = expenseToEdit.title;
+            document.getElementById("category").value = expenseToEdit.category;
+            document.getElementById("date").value = expenseToEdit.date;
+            document.getElementById("amount").value = expenseToEdit.amount;
+            document.getElementById("submiter").innerText = "Save";
+            document.getElementById("expense-id").value = expenseToEdit.id;
+            // Handle saving the edited expense
+        }
     }
-)
+});

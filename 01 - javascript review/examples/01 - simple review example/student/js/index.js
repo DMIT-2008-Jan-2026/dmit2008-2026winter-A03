@@ -1,43 +1,34 @@
-// 1. select form & topic list
-let topicForm = document.querySelector(".new-topic-form")
+// 1. select topic & new topic form
 let topicList = document.querySelector(".topics-list")
+let newTopicForm = document.querySelector(".new-topic-form")
 
-HTML for list topic list item
-<li class="list-group-item">
-    NEW TOPIC HERE
-</li>
-*/
-// 1 select form
-let topicForm = document.querySelector(".new-topic-form")
-let list = document.querySelector(".list-group-item");
-
-console.log(topicForm);
-//5. create function to add the text input
+// 5. create a function addTopicToPage that will take a name & list element as its params
 const addTopicToPage = (topicName, topicListElement) => {
-    //6.a) create template string
-    let newTopicElement = `<li class="list-group-item">${topicName}</li>`
-    topicListElement.innerHTML += newTopicElement;
-
+    // 6a. create a new inner list element and update the HTML
+    let newTopicElement = `<li class="list-group-item">
+        ${topicName}
+    </li>`
+    topicListElement.innerHTML += newTopicElement
 }
 
+// 2. add event listener, stop default form submit event (would reload page)
+newTopicForm.addEventListener(
+    "submit",
+    (event) => {
 
-// 2. add event listener and stop default form submission
-topicForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+        event.preventDefault()
 
-    //3. grab input text & store value
-    let topicInput = e.target.elements["new topic"];
-    let topicText = topicInput.value;
+        // 3. grab input element & extract/store value
+        let topicInput = event.target.elements["new-topic"]
+        let newTopic = topicInput.value
+        console.log(newTopic)
 
-    //4. input validation (no empty strings, use bootstrap classes)
-    if (!topicText) {
-        topicInput.classList.add("is-invalid")
-    } else {
-        topicInput.classList.remove("is-invalid");
-    }
-    //6. call the function
-    addTopicToPage(topicText, list);
-
-    
-    
-});
+        // 4. validation - check for empty, use bootstrap classes for user feedback
+        if (newTopic === "") {
+            topicInput.classList.add("is-invalid")
+        } else {
+            topicInput.classList.remove("is-invalid")
+        }
+        // 6b. don't forget to call the function inside the event listener
+        addTopicToPage(newTopic, topicList)
+    })
