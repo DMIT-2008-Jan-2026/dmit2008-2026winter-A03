@@ -3,6 +3,9 @@ import Head from "next/head";
 // materialUI components
 import Container from '@mui/material/Container';
 
+// my components
+import TodoList from './components/TodoList';
+
 export default function Home() {
   return (
     <>
@@ -15,7 +18,7 @@ export default function Home() {
 
       <main>
         <Container>
-          put some stuff in the container
+          <TodoList />
         </Container>
       </main>
 
