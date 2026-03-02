@@ -10,6 +10,10 @@ export default function TodoList() {
         console.log(event.target.value)
     }
 
+    const onAddTodoClick = () => {
+        console.log("button clicked!")
+    }
+
     return <Box sx={{ flexGrow: 1 }}>
 
         <Grid container spacing={2}>
@@ -33,6 +37,7 @@ export default function TodoList() {
             <Grid item xs={2}>
               <Button
                 variant="contained"
+                onClick={onAddTodoClick}
               >Add Todo</Button>
             </Grid>
 
