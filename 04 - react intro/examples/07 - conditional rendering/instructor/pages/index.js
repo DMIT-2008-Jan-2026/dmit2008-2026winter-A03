@@ -27,6 +27,12 @@ export default function Home() {
   const [searchText, setSearchText] = useState("")
   const [year, setYear] = useState("")
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(`search: ${searchText}`)
+    console.log(`year: ${year}`)
+  }
+
 
   return (
     <div>
@@ -45,7 +51,10 @@ export default function Home() {
           <Typography variant="h2" component="h2" style={{textAlign: "center"}}>
             Movies
           </Typography>
-          <form style={{width: '100%'}}>
+          <form
+            style={{width: '100%'}}
+            onSubmit={handleSubmit}
+          >
             <Grid container spacing={2}>
               {/* This uses an older version of MUI, specific to this package-lock.json,
                   hence the use of item & xs props.
