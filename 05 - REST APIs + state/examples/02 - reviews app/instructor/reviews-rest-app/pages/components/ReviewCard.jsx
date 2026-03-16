@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 export default function ReviewCard({ title, comments, rating }) {
 
   return (
-    <Card>
+    <Card sx={{ mt: 3 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: 'blue' }} aria-label="recipe">
