@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useEffect, useState } from 'react'
 
 import Head from 'next/head'
 import Image from 'next/image'
@@ -28,6 +28,7 @@ import AdaptationReviewCard from '../components/AdaptationReviewCard'
 import { getReviews, postReview } from '../utils/api/reviews.js'
 
 export default function Home() {
+
   const [reviews, setReviews] = useState([])
   const [title, setTitle] = useState("")
   const [comments, setComments] = useState("")
@@ -44,11 +45,17 @@ export default function Home() {
       })
   }
 
-  const loadAllReviewsButton = () => {
+  const loadAllReviews = () => {
     getReviews().then((data)=> {
       setReviews(data)
     })
   }
+
+  useEffect(
+    // no need for button anymore! just load reviews when component mounts (~page loads)
+    () => { loadAllReviews(); },
+    []
+  )
 
   return (
     <div>
@@ -130,19 +137,7 @@ export default function Home() {
               </Grid>
             </Grid>
           </form>
-          <Box
-            sx={{
-              pt: 2,
-              pb: 2,
-            }}
-          >
-            <Button
-              variant="contained"
-              onClick={loadAllReviewsButton}
-            >
-              Load All Current Reviews
-            </Button>
-          </Box>
+
           {reviews.map((adaptation, index)=> {
             return <AdaptationReviewCard
                 key={index}
