@@ -1,3 +1,7 @@
+// our own API functions
+import { deleteReview } from '../utils/api/reviews';
+
+// MUI components
 import Avatar from '@mui/material/Avatar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +21,10 @@ export default function AdaptationReviewCard({ adaptation }) {
 
   const deleteReviewHandler = (reviewId) => {
     console.log(`deleting review: ${reviewId}`)
+    deleteReview(reviewId).then( // delete from API first
+      console.log("deleted!")
+    )
+
   }
 
   return <Card sx={{mt: 2 }}>
