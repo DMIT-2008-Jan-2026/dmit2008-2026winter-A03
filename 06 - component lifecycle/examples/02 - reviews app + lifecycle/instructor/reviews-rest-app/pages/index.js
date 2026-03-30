@@ -25,7 +25,7 @@ import Typography from '@mui/material/Typography';
 
 import AdaptationReviewCard from '../components/AdaptationReviewCard'
 
-import { getReviews, postReview } from '../utils/api/reviews.js'
+import { getReviews, postReview, deleteReview } from '../utils/api/reviews.js'
 
 export default function Home() {
 
@@ -51,11 +51,36 @@ export default function Home() {
     })
   }
 
+  const deleteReviewHandler = (reviewId) => {
+    console.log(`deleting review: ${reviewId}`)
+
+    deleteReview(reviewId).then( // delete from API first
+      // we don't need a predicate/input param for the callback, since we're 
+      // not using anything from the returned data
+      () => {
+        // if the API deletion succeeds, also change it from state, using the setter
+        // function I passed down under a different name:
+        const remainingReviews = reviews.filter( // state vars are immutable; need to rebuild array
+          (review) => { return review.id !== reviewId }
+        )
+
+        setReviews(remainingReviews);
+        console.log("deleted!");
+      }
+    );
+  }
+
   useEffect(
     // no need for button anymore! just load reviews when component mounts (~page loads)
     () => { loadAllReviews(); },
     []
   )
+
+  // for debugging "reviews" purposes only
+  useEffect(()=> {
+    console.log("index.js: 'reviews' changed:");
+    console.log(reviews);
+  }, [reviews])
 
   return (
     <div>
@@ -138,12 +163,14 @@ export default function Home() {
             </Grid>
           </form>
 
+          {/* In order to make something self-delete e.g. by button, I would have to
+              pass some sort of uniquely identifiable field, e.g. the ID
+          */}
           {reviews.map((adaptation, index)=> {
             return <AdaptationReviewCard
                 key={index}
-                rating={adaptation.rating}
-                title={adaptation.title}
-                comment={adaptation.comment}
+                adaptation={adaptation}
+                onDelete={deleteReviewHandler}
               />
           })}
         </Container>

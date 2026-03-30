@@ -1,3 +1,4 @@
+// MUI components
 import Avatar from '@mui/material/Avatar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -9,7 +10,10 @@ import CardContent from '@mui/material/CardContent';
 
 import Typography from '@mui/material/Typography';
 
-export default function AdaptationReviewCard(props) {
+export default function AdaptationReviewCard({
+  adaptation,
+  onDelete,
+}) {
 
   /* We can use an 'action' prop to denote some primary interaction/button for the header, 
       as per MUI docs: (see Complex Interaction @ https://mui.com/material-ui/react-card/#complex-interaction#complex-interaction)
@@ -19,26 +23,28 @@ export default function AdaptationReviewCard(props) {
     <CardHeader
       avatar={
         <Avatar sx={{ bgcolor: 'blue' }} aria-label="recipe">
-          {props.rating}
+          {adaptation.rating}
         </Avatar>
       }
 
       action={
-        <IconButton>
+        <IconButton
+          onClick={() => {onDelete(adaptation.id)}}
+        >
           <DeleteIcon />
         </IconButton>
       }
       
       title={
         <Typography variant="body2" color="text.secondary">
-          {props.title}
+          {adaptation.title}
         </Typography>
       }
       
     />
     <CardContent>
       <Typography variant="body2" color="text.secondary">
-        {props.comment}
+        {adaptation.comment}
       </Typography>
     </CardContent>
 
