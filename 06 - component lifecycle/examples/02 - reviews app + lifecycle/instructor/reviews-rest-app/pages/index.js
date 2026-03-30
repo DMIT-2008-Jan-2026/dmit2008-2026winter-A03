@@ -151,6 +151,8 @@ export default function Home() {
             return <AdaptationReviewCard
                 key={index}
                 adaptation={adaptation}
+                reviews={reviews}            // will need to read reviews
+                onReviewsChange={setReviews} // will need to rewrite reviews
               />
           })}
         </Container>
