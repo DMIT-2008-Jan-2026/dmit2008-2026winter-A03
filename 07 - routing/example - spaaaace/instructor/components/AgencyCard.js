@@ -2,6 +2,7 @@
 https://mui.com/material-ui/react-card/#media
 
 */
+import { useRouter } from 'next/router'; 
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -14,6 +15,14 @@ import Typography from '@mui/material/Typography';
 // in this case, both 'key' and 'agency' are passed as the props object, so I'll just destructure
 // to snipe the agency, since I'm just using that object's data selectively & no other props in here
 export default function AgencyCard({ agency }) {
+
+    const router = useRouter();
+
+    const navigateToAgency = () => {
+      // router.push -> programmatically navigate to a path/URL
+      router.push(`/agency/${agency.id}`)
+    }
+
     return <Card sx={{ marginTop: "8px", maxWidth: 345 }}>
     {agency.image_url && <CardMedia
       component="img"
@@ -33,7 +42,12 @@ export default function AgencyCard({ agency }) {
       </Typography>
     </CardContent>
     <CardActions>
-      <Button size="small">Go to Agency</Button>
+      <Button
+        size="small"
+        onClick={navigateToAgency}
+      >
+        Go To Agency
+      </Button>
     </CardActions>
   </Card>
 }
