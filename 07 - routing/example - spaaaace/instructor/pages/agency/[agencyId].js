@@ -1,0 +1,61 @@
+// react hooks
+import { useState, useEffect } from 'react';
+
+// nextjs routing
+import { useRouter } from 'next/router';
+
+// API functions
+import { getAgency } from '@utils/api/agencies';
+
+// mui components
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+
+import Typography from '@mui/material/Typography';
+
+// our components
+import NavBar from '@components/NavBar';
+
+
+export default function AgencyDetail() {
+
+  const [agencyData, setAgencyData] = useState(null);
+
+  const router = useRouter()
+  const { agencyId } = router.query
+
+  useEffect(
+    // param 1: callback function w/ logic that fires
+    () => {
+      getAgency(agencyId).then(
+        (data) => { 
+          setAgencyData(data)
+          console.log(data)
+        }
+      )
+    },
+
+    // param 2: dependency array (empty array -> only fires on mount/load)
+    [agencyId]
+  )
+
+  return (
+    <>
+
+      <NavBar />
+
+      <Container sx={{paddingTop:2}}>
+        <Grid container>
+          <Grid item xs="2">
+          </Grid>
+          <Grid item xs="10">
+            <Typography variant="h3" gutterBottom>
+              Agency Page for {agencyId}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Container>
+
+    </>
+  )
+}
