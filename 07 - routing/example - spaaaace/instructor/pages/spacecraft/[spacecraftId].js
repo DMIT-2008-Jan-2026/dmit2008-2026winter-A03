@@ -62,7 +62,7 @@ export default function SpaceCraft() {
             <Grid item xs="4">
               <SimpleDetailsCard 
                 title={`${spacecraftDetails.name} configuration`}
-                subDescription={spacecraftDetails.spacecraft_config.details}
+                subDescription={spacecraftDetails?.spacecraft_config?.details}
               />
             </Grid>
 
