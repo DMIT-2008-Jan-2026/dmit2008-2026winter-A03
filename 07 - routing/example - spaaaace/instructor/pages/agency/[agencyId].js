@@ -15,7 +15,8 @@ import Typography from '@mui/material/Typography';
 
 // our components
 import NavBar from '@components/NavBar';
-
+import LoadingCircle from '@components/LoadingCircle';
+import SimpleDetailsCard from '@components/SimpleDetailsCard';
 
 export default function AgencyDetail() {
 
@@ -44,17 +45,81 @@ export default function AgencyDetail() {
 
       <NavBar />
 
-      <Container sx={{paddingTop:2}}>
-        <Grid container>
-          <Grid item xs="2">
-          </Grid>
-          <Grid item xs="10">
-            <Typography variant="h3" gutterBottom>
-              Agency Page for {agencyId}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Container>
+      { !agencyData ?
+          <LoadingCircle />
+        :
+          <Container sx={{paddingTop:2}}>
+            <Grid container>
+
+              <Grid item xs="2">
+                <img
+                  alt={agencyData.name}
+                  src={agencyData.logo_url}
+                  style={{
+                    width: '120px'
+                  }}
+                />
+              </Grid>
+              <Grid item xs="10">
+                <Typography variant="h3" gutterBottom>
+                  {`${agencyData.name} (${agencyData.abbrev})`}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={4}>
+                <SimpleDetailsCard
+                  title="Total Launches"
+                  description={agencyData.total_launch_count} 
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <SimpleDetailsCard
+                  title="Successful Launches"
+                  description={agencyData.successful_launches} 
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <SimpleDetailsCard
+                  title="Successful Launches"
+                  description={agencyData.successful_launches} 
+                />
+              </Grid>
+
+              <Grid item xs="4">
+                <Typography variant="h5">
+                    {`Agency Information`}
+                </Typography>
+                <SimpleDetailsCard 
+                    title={'administrator'}
+                    description={`${agencyData.administrator}`}
+                />
+                <SimpleDetailsCard 
+                    title={'Space Agency Details'}
+                    description={`Founded ${agencyData.founding_year}`}
+                    subDescription={agencyData.description}
+                />
+              </Grid>
+
+              <Grid item xs="4">
+                <Typography variant="h5">
+                    {`SpaceCraft`}
+                </Typography>
+                { agencyData.spacecraft_list && agencyData.spacecraft_list.map((spaceCraft)=> {
+                    return <SimpleDetailsCard 
+                        key={spaceCraft.id}
+                        description={`${spaceCraft.name}`}
+                        subDescription={spaceCraft.id}
+                        buttonCallback={()=> {
+                          router.push(`/spacecraft/${spaceCraft.id}`)   
+                        }}
+                        buttonName="Go to SpaceCraft"
+                      />
+                })}
+              </Grid>
+
+            </Grid>
+          </Container>
+      }
 
     </>
   )
