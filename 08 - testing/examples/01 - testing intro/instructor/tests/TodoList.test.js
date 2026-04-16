@@ -47,6 +47,15 @@ test('new todo item is added successfully', () => {
     { target: { value: EXPECTED_STRING} } // param 2: the event object
   )
 
-  // 3. test that the element now contains this value
-  expect(inputText.value).toBe(EXPECTED_STRING)
+  // 3. assert/expect: test that the element now contains this value
+  // expect(inputText.value).toBe(EXPECTED_STRING) // i don't NEED this assertion; I could just fire -> click -> inspect list
+
+  // 2, again: act/execute logic
+  act(
+    () => { addButton.click() }
+  )
+
+  // 3, again: assert/expect: test that the item is added to the container
+  expect(inputText.value).toBe('') // input text is reset on submission
+  expect(todoList).toHaveTextContent(EXPECTED_STRING)
 })
