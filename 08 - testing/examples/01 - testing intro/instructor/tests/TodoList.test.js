@@ -19,3 +19,15 @@ test(
       expect(title).toBeInTheDocument()
     }
 )
+
+test('add button renders correctly', () => {
+  // 1. setup
+  render(<TodoList />)
+  // instead of just selecting by rendered values on-'screen' (finnicky because once your UI
+  // gets more complex, e.g. what if two fields or display elements have the same value?)
+  // we can provide a 'data-testid' attribute/prop in a component and select it more precisely!
+  const addButton = screen.getByTestId("add-new-todo-button")
+
+  // test
+  expect(addButton).toBeInTheDocument()
+})
