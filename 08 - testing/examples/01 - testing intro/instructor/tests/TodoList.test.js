@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import TodoList from '../components/TodoList'
 
@@ -19,3 +19,43 @@ test(
       expect(title).toBeInTheDocument()
     }
 )
+
+test('add button renders correctly', () => {
+  // 1. setup
+  render(<TodoList />)
+  // instead of just selecting by rendered values on-'screen' (finnicky because once your UI
+  // gets more complex, e.g. what if two fields or display elements have the same value?)
+  // we can provide a 'data-testid' attribute/prop in a component and select it more precisely!
+  const addButton = screen.getByTestId("add-new-todo-button")
+
+  // test
+  expect(addButton).toBeInTheDocument()
+})
+
+test('new todo item is added successfully', () => {
+  // 1. setup
+  const EXPECTED_STRING = "Learning testing in JS & React"
+
+  render(<TodoList />)
+  const inputText = screen.getByLabelText("New Todo") // <- another selector via 'label' prop/attr
+  const addButton = screen.getByTestId("add-new-todo-button")
+  const todoList  = screen.getByTestId("todo-item-list")
+
+  // 2. act / execute logic
+  fireEvent.change( // simulate a 'change' event, e.g. what a drop-down or text input would fire
+    inputText,                            // param 1: the element 'emitting' the event
+    { target: { value: EXPECTED_STRING} } // param 2: the event object
+  )
+
+  // 3. assert/expect: test that the element now contains this value
+  // expect(inputText.value).toBe(EXPECTED_STRING) // i don't NEED this assertion; I could just fire -> click -> inspect list
+
+  // 2, again: act/execute logic
+  act(
+    () => { addButton.click() }
+  )
+
+  // 3, again: assert/expect: test that the item is added to the container
+  expect(inputText.value).toBe('') // input text is reset on submission
+  expect(todoList).toHaveTextContent(EXPECTED_STRING)
+})
