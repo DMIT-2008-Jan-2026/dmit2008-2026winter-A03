@@ -1,3 +1,6 @@
+import { useContext } from 'react';
+import { ThemeContext } from './context/ThemeContext';
+
 import Header from './components/Header';
 import Filters from './components/Filters';
 import Results from './components/Results';
@@ -5,8 +8,13 @@ import Details from './components/Details';
 import PageLayout from './components/layout/PageLayout';
 
 function App() {
+
+  // consuming shared state: call useContext w/ a context -> shared state now accessible
+  const { theme } = useContext(ThemeContext);
+
   return (
     <PageLayout header={<Header tagline="Find the right resources, right away" />}>
+      Current theme is: {theme}
       <aside className="md:col-span-3 lg:col-span-1">
         <Filters />
       </aside>
@@ -17,6 +25,7 @@ function App() {
         <Details />
       </aside>
       <div className="btn btn-primary">is DaisyUI working?</div>
+
     </PageLayout>
     // <PageLayout
     //   header={<Header tagline="Find the right resources, right away" />}
